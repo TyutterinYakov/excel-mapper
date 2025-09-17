@@ -26,7 +26,7 @@ public class LocalDateReader extends DateExcelReader<LocalDate> {
             if (type == CellType.NUMBER || type == CellType.FORMULA) {
                 return cell.asDate().toLocalDate();
             }
-            final String value = cell.getText().trim();
+            final String value = cell.getRawValue().trim();
             return readerCustomization.getDateFormat()
                     .map(pattern -> LocalDate.parse(value, DateTimeFormatter.ofPattern(pattern)))
                     .orElseGet(() -> LocalDate.parse(value));

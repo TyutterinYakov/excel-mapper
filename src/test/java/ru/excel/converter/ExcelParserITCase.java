@@ -7,15 +7,14 @@ import org.springframework.context.annotation.Import;
 import ru.excel.converter.classes.OnlyDateTypes;
 import ru.excel.converter.classes.ThreeTypesForMapping;
 import ru.excel.converter.classes.WithAllDefaultJavaTypes;
+import ru.excel.converter.classes.WithCustomReader;
 import ru.excel.converter.configuration.ExcelConverterConfiguration;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,5 +84,49 @@ public class ExcelParserITCase {
         final List<OnlyDateTypes> actual = excelParser
                 .parse(readFile("/files/only_date.xlsx"), OnlyDateTypes.class, 0);
         assertEquals(4, actual.size());
+
+        final List<OnlyDateTypes> expected = List.of(
+                OnlyDateTypes.builder()
+                        .offsetDateTimeValue(OffsetDateTime.parse("2025-09-15T15:40:37.180187+03:00"))
+                        .instantValue(Instant.parse("2025-09-15T12:40:22.020026Z"))
+                        .localDateTimeValue(LocalDateTime.parse("2025-09-15T15:39:32.559607"))
+                        .localDateValue(LocalDate.of(2025, 12, 10))
+                        .customLocalDateValueFormat(LocalDate.of(2025, 12, 10))
+                        .build(),
+                OnlyDateTypes.builder()
+                        .offsetDateTimeValue(OffsetDateTime.parse("2025-09-15T15:40:37.180187+03:00"))
+                        .instantValue(Instant.parse("2025-09-15T12:40:22.020026Z"))
+                        .localDateTimeValue(LocalDateTime.parse("2025-01-11T15:33:32.54"))
+                        .localDateValue(LocalDate.of(2025, 1, 14))
+                        .customLocalDateValueFormat(LocalDate.of(2025, 12, 11))
+                        .build(),
+                OnlyDateTypes.builder()
+                        .offsetDateTimeValue(OffsetDateTime.parse("2025-09-15T15:40:37.180187+03:00"))
+                        .instantValue(Instant.parse("2025-09-15T12:40:22.020026Z"))
+                        .localDateTimeValue(LocalDateTime.parse("2024-03-11T15:39:32.559607"))
+                        .localDateValue(LocalDate.of(2025, 2, 11))
+                        .customLocalDateValueFormat(LocalDate.of(2025, 12, 11))
+                        .build(),
+                OnlyDateTypes.builder()
+                        .localDateValue(LocalDate.of(2024, 9, 10))
+                        .build()
+        );
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void customReaderTest() {
+        final List<WithCustomReader> actual = excelParser
+                .parse(readFile("/files/custom_reader.xlsx"), WithCustomReader.class, 0);
+        assertEquals(3, actual.size());
+        final String testValue = "THIS IS TEST CUSTOM READER VALUE";
+
+        final List<WithCustomReader> expected = List.of(
+                WithCustomReader.builder().strValue("str1").customExcelReaderValue(testValue).build(),
+                WithCustomReader.builder().strValue("str2").customExcelReaderValue(testValue).build(),
+                WithCustomReader.builder().strValue("str3").customExcelReaderValue(testValue).build());
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 }

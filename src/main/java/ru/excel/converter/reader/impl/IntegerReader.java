@@ -7,12 +7,8 @@ import org.springframework.stereotype.Component;
 import ru.excel.converter.reader.NumberExcelReader;
 import ru.excel.converter.reader.customization.ReaderCustomization;
 
-import java.util.regex.Pattern;
-
 @Component
 public class IntegerReader extends NumberExcelReader<Integer> {
-    private final String PATTERN = Pattern.compile("").pattern();
-
     public IntegerReader(MessageSource messageSource) {
         super(messageSource);
     }

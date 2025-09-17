@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.excel.converter.annotation.ExcelCell;
+import ru.excel.converter.reader.ExcelReader;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
