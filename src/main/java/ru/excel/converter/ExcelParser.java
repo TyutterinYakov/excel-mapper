@@ -122,6 +122,7 @@ public class ExcelParser {
             }).filter(Objects::nonNull).toList();
 
             if (!exception.getErrors().isEmpty()) {
+                log.warn(exception.getErrors().toString());
                 throw exception;
             }
             return listResult;

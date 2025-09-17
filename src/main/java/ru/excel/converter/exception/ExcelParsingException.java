@@ -18,7 +18,6 @@ public class ExcelParsingException extends ExcelException {
         this.errors = new HashMap<>();
     }
 
-
     public void addError(int rowNum, int colNum, @NotNull String colName, @NotNull String error) {
         this.addError(rowNum, colNum, colName, List.of(error));
     }

@@ -5,6 +5,7 @@ import ru.excel.converter.classes.CorrectColumnNames;
 import ru.excel.converter.classes.DuplicateColumnNames;
 import ru.excel.converter.classes.NoRequiredAllColumns;
 import ru.excel.converter.classes.WithoutColumns;
+import ru.excel.converter.exception.ExcelException;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class ColumnNamesValidatorTest {
     @Test
     void validateWithoutRequiredFieldInFileExceptionTest() {
         final List<String> columnNamesFromFile = List.of("str_value", "offset_date_time_value");
-        final String actualMessage = assertThrows(IllegalStateException.class, () ->
+        final String actualMessage = assertThrows(ExcelException.class, () ->
                 ColumnNamesValidator.validate(columnNamesFromFile, CorrectColumnNames.class)).getMessage();
         final String expectedMessage = "The required \"int_value\" column is missing from the file";
         assertEquals(expectedMessage, actualMessage);
@@ -60,7 +61,7 @@ public class ColumnNamesValidatorTest {
     @Test
     void validateWithUnknownHeadersInFileExceptionTest() {
         final List<String> columnNamesFromFile = List.of("str_value", "int_value", "offset_date_time_value", "unknown_value");
-        final String actualMessage = assertThrows(IllegalStateException.class, () ->
+        final String actualMessage = assertThrows(ExcelException.class, () ->
                 ColumnNamesValidator.validate(columnNamesFromFile, CorrectColumnNames.class)).getMessage();
         final String expectedMessage = "The file contains unknown headers: [unknown_value]";
         assertEquals(expectedMessage, actualMessage);

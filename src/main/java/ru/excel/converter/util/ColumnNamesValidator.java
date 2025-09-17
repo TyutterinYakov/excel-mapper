@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import ru.excel.converter.annotation.ExcelCell;
+import ru.excel.converter.exception.ExcelException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class ColumnNamesValidator {
             columnNameFromFields.add(name);
             if (!columnNamesFromFileUnique.contains(name) && annotation.required()) {
                 //TODO: Возможно, подумать над более полный описанием ошибки. Чтобы выброс происходил после полного прохода
-                throw new IllegalStateException("The required \"" + name + "\" column is missing from the file");
+                throw new ExcelException("The required \"" + name + "\" column is missing from the file");
             }
         }
 
@@ -49,7 +50,7 @@ public class ColumnNamesValidator {
         columnNameFromFields.forEach(columnNamesFromFileUnique::remove);
 
         if (!columnNamesFromFileUnique.isEmpty()) {
-            throw new IllegalStateException("The file contains unknown headers: " + columnNamesFromFileUnique);
+            throw new ExcelException("The file contains unknown headers: " + columnNamesFromFileUnique);
         }
 
         return columnNamesFromFile;

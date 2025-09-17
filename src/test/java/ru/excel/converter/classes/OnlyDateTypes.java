@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
@@ -26,4 +27,8 @@ public class OnlyDateTypes {
     private OffsetDateTime offsetDateTimeValue;
     @ExcelCell(name = "custom_local_date_value_format", dateFormat = "MM/dd/yyyy")
     private LocalDate customLocalDateValueFormat;
+    @ExcelCell(name = "custom_local_date_time_value_format", dateFormat = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime customLocalDateTimeValueFormat;
+    @ExcelCell(name = "custom_offset_date_time_value_format", dateFormat = "dd MM yyyy HH:mm:ss.SSSSSS z")
+    private OffsetDateTime customOffsetDateTimeValueFormat;
 }

@@ -16,5 +16,7 @@ public abstract class ExcelReader<T> {
      * @return Значение с типом <T>
      * @throws CellExcelReaderException Если полученное значения невозможно спарсить в тип <T>
      */
+    //TODO: Можно было бы добавить постОбработчик для значения, которое мы получаем из cell. Но нужно подумать,
+    // так как не всегда значение передается именно в виде текста. А модифицировать Cell нельзя
     public abstract @NotNull T read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization);
 }

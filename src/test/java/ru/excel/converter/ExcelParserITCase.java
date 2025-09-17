@@ -9,10 +9,7 @@ import ru.excel.converter.classes.WithAllDefaultJavaTypes;
 import ru.excel.converter.classes.WithCustomReader;
 import ru.excel.converter.exception.ExcelParsingException;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +89,8 @@ public class ExcelParserITCase {
                         .localDateTimeValue(LocalDateTime.parse("2025-09-15T15:39:32.559607"))
                         .localDateValue(LocalDate.of(2025, 12, 10))
                         .customLocalDateValueFormat(LocalDate.of(2025, 12, 10))
+                        .customLocalDateTimeValueFormat(LocalDateTime.of(2022, 1, 14, 13, 0, 12))
+                        .customOffsetDateTimeValueFormat(OffsetDateTime.of(2025, 9, 15, 15, 40, 37, 180187000, ZoneOffset.ofHours(2)))
                         .build(),
                 OnlyDateTypes.builder()
                         .offsetDateTimeValue(OffsetDateTime.parse("2025-09-15T15:40:37.180187+03:00"))
@@ -99,6 +98,8 @@ public class ExcelParserITCase {
                         .localDateTimeValue(LocalDateTime.parse("2025-01-11T15:33:32.54"))
                         .localDateValue(LocalDate.of(2025, 1, 14))
                         .customLocalDateValueFormat(LocalDate.of(2025, 12, 11))
+                        .customLocalDateTimeValueFormat(LocalDateTime.of(2020, 1, 15, 13, 0, 12))
+                        .customOffsetDateTimeValueFormat(OffsetDateTime.of(2025, 9, 15, 15, 40, 37, 180187000, ZoneOffset.ofHours(5)))
                         .build(),
                 OnlyDateTypes.builder()
                         .offsetDateTimeValue(OffsetDateTime.parse("2025-09-15T15:40:37.180187+03:00"))
@@ -109,6 +110,7 @@ public class ExcelParserITCase {
                         .build(),
                 OnlyDateTypes.builder()
                         .localDateValue(LocalDate.of(2024, 9, 10))
+                        .customOffsetDateTimeValueFormat(OffsetDateTime.of(2025, 9, 15, 15, 40, 37, 180187000, ZoneOffset.UTC))
                         .build()
         );
 
