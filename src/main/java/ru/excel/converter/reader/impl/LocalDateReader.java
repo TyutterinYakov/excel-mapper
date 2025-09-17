@@ -1,6 +1,7 @@
 package ru.excel.converter.reader.impl;
 
 import org.dhatim.fastexcel.reader.Cell;
+import org.dhatim.fastexcel.reader.CellType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,13 @@ public class LocalDateReader extends DateExcelReader<LocalDate> {
 
     @Override
     public @NotNull LocalDate read(@NotNull Cell cell) {
-        return catcher(cell.getText(), LocalDate.class, () -> LocalDate.parse(cell.getText().trim()));
+        return catcher(cell.getText(), LocalDate.class, () -> {
+            final CellType type = cell.getType();
+            //На случай, если пользователь задал кастомный формат даты в виде числа
+            if (type == CellType.NUMBER || type == CellType.FORMULA) {
+                return cell.asDate().toLocalDate();
+            }
+            return LocalDate.parse(cell.getText().trim());
+        });
     }
 }

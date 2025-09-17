@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import ru.excel.converter.classes.OnlyDateTypes;
 import ru.excel.converter.classes.ThreeTypesForMapping;
 import ru.excel.converter.classes.WithAllDefaultJavaTypes;
 import ru.excel.converter.configuration.ExcelConverterConfiguration;
@@ -76,5 +77,12 @@ public class ExcelParserITCase {
         );
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void onlyDateTest() {
+        final List<OnlyDateTypes> actual = excelParser
+                .parse(readFile("/files/only_date.xlsx"), OnlyDateTypes.class, 0);
+        assertEquals(4, actual.size());
     }
 }
