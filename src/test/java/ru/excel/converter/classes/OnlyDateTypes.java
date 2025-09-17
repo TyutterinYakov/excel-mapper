@@ -24,4 +24,6 @@ public class OnlyDateTypes {
     private Instant instantValue;
     @ExcelCell(name = "offset_date_time_value")
     private OffsetDateTime offsetDateTimeValue;
+    @ExcelCell(name = "custom_local_date_value_format", dateFormat = "MM/dd/yyyy")
+    private LocalDate customLocalDateValueFormat;
 }

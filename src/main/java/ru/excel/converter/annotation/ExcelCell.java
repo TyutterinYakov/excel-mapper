@@ -8,4 +8,5 @@ import java.lang.annotation.*;
 public @interface ExcelCell {
     String name();
     boolean required() default true;
+    String dateFormat() default "";
 }

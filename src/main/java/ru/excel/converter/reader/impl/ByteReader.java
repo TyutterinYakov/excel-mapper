@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ru.excel.converter.reader.NumberExcelReader;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 @Component
 public class ByteReader extends NumberExcelReader<Byte> {
@@ -14,7 +15,7 @@ public class ByteReader extends NumberExcelReader<Byte> {
     }
 
     @Override
-    public @NotNull Byte read(@NotNull Cell cell) {
+    public @NotNull Byte read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization) {
         return catcher(cell.getRawValue(), Byte.class, () -> Byte.parseByte(cell.getRawValue().trim()));
     }
 }

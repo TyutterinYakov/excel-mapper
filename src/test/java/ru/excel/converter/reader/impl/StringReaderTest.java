@@ -3,6 +3,7 @@ package ru.excel.converter.reader.impl;
 import org.dhatim.fastexcel.reader.Cell;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -17,7 +18,7 @@ public class StringReaderTest {
     void covertTest(String expected) {
         final Cell cell = mock(Cell.class);
         when(cell.getRawValue()).thenReturn(expected);
-        final String actual = stringReader.read(cell);
+        final String actual = stringReader.read(cell, new ReaderCustomization());
         assertEquals(expected.trim(), actual);
     }
 }

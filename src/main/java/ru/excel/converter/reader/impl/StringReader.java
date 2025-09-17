@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ru.excel.converter.reader.ExcelReader;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 @Component
 class StringReader extends ExcelReader<String> {
@@ -14,7 +15,7 @@ class StringReader extends ExcelReader<String> {
     }
 
     @Override
-    public @NotNull String read(@NotNull Cell cell) {
+    public @NotNull String read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization) {
         return cell.getRawValue().trim();
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.support.StaticMessageSource;
 import ru.excel.converter.exception.CellExcelReaderException;
 import ru.excel.converter.reader.NumberExcelReader;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 import ru.excel.converter.util.ReflectionUtil;
 
 import java.util.Locale;
@@ -43,7 +44,7 @@ public abstract class NumberExcelReaderBaseTest<T extends Number> {
     void convertOkTest(String strValue, T expected) {
         final Cell cell = mock(Cell.class);
         when(cell.getRawValue()).thenReturn(strValue);
-        final T actual = excelReader.read(cell);
+        final T actual = excelReader.read(cell, new ReaderCustomization());
         assertEquals(expected, actual);
     }
 
@@ -53,7 +54,7 @@ public abstract class NumberExcelReaderBaseTest<T extends Number> {
         final Cell cell = mock(Cell.class);
         when(cell.getRawValue()).thenReturn(strValue);
         final String actual = assertThrows(CellExcelReaderException.class, () ->
-                excelReader.read(cell)).getMessage();
+                excelReader.read(cell, new ReaderCustomization())).getMessage();
         final String expected = "The value \"%s\" does not match the type \"%s\"".formatted(strValue, getType().getName());
         assertEquals(expected, actual);
     }

@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ru.excel.converter.reader.NumberExcelReader;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 import java.util.regex.Pattern;
 
@@ -17,7 +18,7 @@ public class IntegerReader extends NumberExcelReader<Integer> {
     }
 
     @Override
-    public @NotNull Integer read(@NotNull Cell cell) {
+    public @NotNull Integer read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization) {
         return catcher(cell.getRawValue(), Integer.class, () -> Integer.parseInt(cell.getRawValue().trim()));
     }
 }

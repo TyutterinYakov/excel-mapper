@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ru.excel.converter.exception.CellExcelReaderException;
 import ru.excel.converter.reader.ExcelReader;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 import java.util.Locale;
 import java.util.Map;
@@ -25,7 +26,7 @@ class BooleanReader extends ExcelReader<Boolean> {
     }
 
     @Override
-    public @NotNull Boolean read(@NotNull Cell cell) {
+    public @NotNull Boolean read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization) {
         final Boolean result = ACCEPTABLE_VALUES.get(cell.getRawValue().trim().toLowerCase());
         if (result == null) {
             throw new CellExcelReaderException(messageSource.getMessage(ERROR_MESSAGE_KEY, new Object[]{cell.getRawValue()},

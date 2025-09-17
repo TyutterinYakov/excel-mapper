@@ -3,6 +3,7 @@ package ru.excel.converter;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
@@ -14,6 +15,7 @@ import ru.excel.converter.exception.CellExcelReaderException;
 import ru.excel.converter.exception.CellParsingException;
 import ru.excel.converter.reader.ExcelReader;
 import ru.excel.converter.reader.ExcelReaderFactory;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 import ru.excel.converter.util.ReflectionUtil;
 
 import java.io.File;
@@ -79,8 +81,8 @@ public class ExcelParser {
                 new IllegalStateException("The sheet with index " + sheetNumber +
                         " is missing from the transferred file"));
 
-        final Map<String, Field> fieldByColumnName = ReflectionUtil.getDeclaredFieldsWithAnnotation(type, ExcelCell.class)
-                .stream().collect(Collectors.toMap(f -> f.getAnnotation(ExcelCell.class).name(), Function.identity()));
+        final Map<String, ReaderCustomization> readerCustomizationByColumnName = ReflectionUtil.getDeclaredFieldsWithAnnotation(type, ExcelCell.class)
+                .stream().collect(Collectors.toMap(f -> f.getAnnotation(ExcelCell.class).name(), ReaderCustomization::of));
         try {
 //            final AtomicReference<CellParsingException> cellParsingException = new AtomicReference<>(new CellParsingException());
             Map<Integer, Map<Integer, Map<String, List<String>>>> errors = new ConcurrentHashMap<>();
@@ -100,18 +102,16 @@ public class ExcelParser {
                 for (Cell cell : row) {
                     if (cell != null && !StringUtils.isBlank(cell.getRawValue())) {
                         final String columnName = columnNames.get(colNumber);
-                        final Field field = fieldByColumnName.get(columnName);
+                        final ReaderCustomization readerCustomization = readerCustomizationByColumnName.get(columnName);
+                        final Field field = readerCustomization.getCurrentField();
                         final ExcelReader<?> reader = excelReaderFactory
                                 .getReader(field);
                         try {
-                            final Object readValue = reader.read(cell);
+                            final Object readValue = reader.read(cell, readerCustomization);
                             setValueToField(field, readValue, result);
                         } catch (CellExcelReaderException ex) {
-                            final Map<Integer, Map<String, List<String>>> rowErrors = errors.computeIfAbsent(currentRowIndex, v -> new HashMap<>());
-                            final Map<String, List<String>> columnError = rowErrors.computeIfAbsent(colNumber, v -> new HashMap<>());
-                            final List<String> cellError = columnError.computeIfAbsent(columnName, v -> new ArrayList<>());
-                            cellError.add(ex.getMessage());
-//                            cellParsingException.get().addError(colNumber, currentRowIndex, columnName, ex.getMessage());
+                            log.warn("An error occurred when parsing the value", ex);
+                            //TODO Подумать над записью ошибок с выбросом исключения
                         }
                         setValueCount++;
                     }

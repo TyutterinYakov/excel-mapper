@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.context.support.StaticMessageSource;
 import ru.excel.converter.exception.CellExcelReaderException;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -33,7 +34,7 @@ public class BooleanReaderTest {
     void readTest(String value, Boolean expected) {
         final Cell cell = mock(Cell.class);
         when(cell.getRawValue()).thenReturn(value);
-        final Boolean actual = booleanReader.read(cell);
+        final Boolean actual = booleanReader.read(cell, new ReaderCustomization());
         assertEquals(expected, actual);
     }
 
@@ -43,7 +44,7 @@ public class BooleanReaderTest {
         final Cell cell = mock(Cell.class);
         when(cell.getRawValue()).thenReturn(value);
         final String actual = assertThrows(CellExcelReaderException.class, () ->
-                booleanReader.read(cell)).getMessage();
+                booleanReader.read(cell, new ReaderCustomization())).getMessage();
         final String expected = "Incorrect value \"%s\" for type Boolean".formatted(value);
         assertEquals(expected, actual);
     }

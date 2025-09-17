@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ru.excel.converter.reader.DateExcelReader;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 import java.time.Instant;
 
@@ -15,7 +16,7 @@ public class InstantReader extends DateExcelReader<Instant> {
     }
 
     @Override
-    public @NotNull Instant read(@NotNull Cell cell) {
+    public @NotNull Instant read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization) {
         return catcher(cell.getText(), Instant.class, () -> Instant.parse(cell.getText().trim()));
     }
 }

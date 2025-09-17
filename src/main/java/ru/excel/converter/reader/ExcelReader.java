@@ -5,6 +5,7 @@ import org.dhatim.fastexcel.reader.Cell;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import ru.excel.converter.exception.CellExcelReaderException;
+import ru.excel.converter.reader.customization.ReaderCustomization;
 
 @RequiredArgsConstructor
 public abstract class ExcelReader<T> {
@@ -15,5 +16,5 @@ public abstract class ExcelReader<T> {
      * @return Значение с типом <T>
      * @throws CellExcelReaderException Если полученное значения невозможно спарсить в тип <T>
      */
-    public abstract @NotNull T read(@NotNull Cell cell);
+    public abstract @NotNull T read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization);
 }
