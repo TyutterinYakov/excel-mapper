@@ -86,8 +86,4 @@ public class ExcelParserITCase {
                 .parse(readFile("/files/only_date.xlsx"), OnlyDateTypes.class, 0);
         assertEquals(4, actual.size());
     }
-
-    public static void main(String[] args) {
-        LocalDate.parse("12/11/2025", DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-    }
 }

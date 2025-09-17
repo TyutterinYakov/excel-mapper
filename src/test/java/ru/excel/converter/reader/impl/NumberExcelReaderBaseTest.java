@@ -44,6 +44,7 @@ public abstract class NumberExcelReaderBaseTest<T extends Number> {
     void convertOkTest(String strValue, T expected) {
         final Cell cell = mock(Cell.class);
         when(cell.getRawValue()).thenReturn(strValue);
+        when(cell.getText()).thenReturn(strValue);
         final T actual = excelReader.read(cell, new ReaderCustomization());
         assertEquals(expected, actual);
     }
@@ -53,6 +54,7 @@ public abstract class NumberExcelReaderBaseTest<T extends Number> {
     void convertExceptionTest(String strValue) {
         final Cell cell = mock(Cell.class);
         when(cell.getRawValue()).thenReturn(strValue);
+        when(cell.getText()).thenReturn(strValue);
         final String actual = assertThrows(CellExcelReaderException.class, () ->
                 excelReader.read(cell, new ReaderCustomization())).getMessage();
         final String expected = "The value \"%s\" does not match the type \"%s\"".formatted(strValue, getType().getName());
