@@ -1,12 +1,15 @@
 package ru.excel.converter.reader;
 
 import lombok.extern.slf4j.Slf4j;
+import org.dhatim.fastexcel.reader.Cell;
+import org.dhatim.fastexcel.reader.CellType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import ru.excel.converter.exception.CellExcelReaderException;
 
+import java.math.BigDecimal;
 import java.util.Locale;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 @Slf4j
 public abstract class NumberExcelReader<T extends Number> extends ExcelReader<T> {
@@ -16,13 +19,18 @@ public abstract class NumberExcelReader<T extends Number> extends ExcelReader<T>
         super(messageSource);
     }
 
-    protected T catcher(@NotNull String value, @NotNull Class<T> type, @NotNull Supplier<T> catcher) {
+    protected T catcher(@NotNull Cell cell, @NotNull Class<T> type,
+                        @NotNull Function<String, T> forStrValue,
+                        @NotNull Function<BigDecimal, T> forNumberType) {
         try {
-            return catcher.get();
+            if (cell.getType() == CellType.NUMBER) {
+                return forNumberType.apply(cell.asNumber());
+            }
+            return forStrValue.apply(cell.getRawValue().trim());
         } catch (Exception ex) {
-            log.warn("Incorrect value {} for type {}", value, type.getName());
+            log.debug("Incorrect value {} for type {}", cell.getText(), type.getName());
             throw new CellExcelReaderException(messageSource.getMessage(MESSAGE_KEY,
-                    new Object[]{value, type.getName()}, Locale.getDefault()));
+                    new Object[]{cell.getText(), type.getName()}, Locale.getDefault()));
         }
     }
 }

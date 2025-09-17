@@ -3,25 +3,25 @@ package ru.excel.converter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import ru.excel.converter.classes.OnlyDateTypes;
 import ru.excel.converter.classes.ThreeTypesForMapping;
 import ru.excel.converter.classes.WithAllDefaultJavaTypes;
 import ru.excel.converter.classes.WithCustomReader;
-import ru.excel.converter.configuration.ExcelConverterConfiguration;
+import ru.excel.converter.exception.ExcelParsingException;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.excel.converter.util.TestUtil.readFile;
 
 @SpringBootTest
-@Import(ExcelConverterConfiguration.class)
 public class ExcelParserITCase {
     @Autowired
     private ExcelParser excelParser;
@@ -36,7 +36,7 @@ public class ExcelParserITCase {
                 ThreeTypesForMapping.builder().longValue(11111111111L).strValue("String1").boolValue(true).build(),
                 ThreeTypesForMapping.builder().longValue(222222222222L).strValue("String2").boolValue(false).build(),
                 ThreeTypesForMapping.builder().longValue(3333333333333L).strValue("String3").boolValue(true).build()
-                );
+        );
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
@@ -128,5 +128,31 @@ public class ExcelParserITCase {
                 WithCustomReader.builder().strValue("str3").customExcelReaderValue(testValue).build());
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void exceptionTest() {
+        final Map<Integer, Map<Integer, Map<String, List<String>>>> actualErrors = assertThrows(ExcelParsingException.class, () ->
+                excelParser.parse(readFile("/files/exception_test.xlsx"), ThreeTypesForMapping.class, 0)).getErrors();
+
+        Map<Integer, Map<String, List<String>>> firstRow = Map.of(
+                0, Map.of("long_value", List.of("The value \"lala\" does not match the type \"java.lang.Long\"")),
+                2, Map.of("bool_value", List.of("Incorrect value \"342.0\" for type \"java.lang.Boolean\"")));
+
+        Map<Integer, Map<String, List<String>>> secondRow = Map.of(
+                2, Map.of("bool_value", List.of("Incorrect value \"rtrtr\" for type \"java.lang.Boolean\"")));
+
+        Map<Integer, Map<String, List<String>>> thirdRow = Map.of(
+                0, Map.of("long_value", List.of("The value \"trttr\" does not match the type \"java.lang.Long\"")));
+
+        final Map<Integer, Map<Integer, Map<String, List<String>>>> expectedErrors = Map.of(
+                1, firstRow,
+                2, secondRow,
+                3, thirdRow
+        );
+
+        assertThat(actualErrors).isEqualTo(expectedErrors);
+
+
     }
 }

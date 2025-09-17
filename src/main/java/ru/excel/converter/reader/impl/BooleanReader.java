@@ -29,8 +29,8 @@ class BooleanReader extends ExcelReader<Boolean> {
     public @NotNull Boolean read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization) {
         final Boolean result = ACCEPTABLE_VALUES.get(cell.getRawValue().trim().toLowerCase());
         if (result == null) {
-            throw new CellExcelReaderException(messageSource.getMessage(ERROR_MESSAGE_KEY, new Object[]{cell.getRawValue()},
-                    Locale.getDefault()));
+            throw new CellExcelReaderException(messageSource.getMessage(ERROR_MESSAGE_KEY,
+                    new Object[]{cell.getRawValue(), Boolean.class.getName()}, Locale.getDefault()));
         }
         return result;
     }

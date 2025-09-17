@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 public class ExcelReaderFactory {
@@ -17,10 +16,8 @@ public class ExcelReaderFactory {
 
     @SuppressWarnings("unchecked")
     public ExcelReaderFactory(List<ExcelReader<?>> readers) {
-        //TODO Добавить логику по добавлению глобального оверайдера базового типа
-        //Извлекаем типы из дженериков и на его основе формируем мапу readersByType
         readersByType = new HashMap<>();
-        readers.stream().forEach(r -> {
+        readers.forEach(r -> {
             final Class<?> type = ReflectionUtil.getTypeFromGeneric(r.getClass());
             readersByType.computeIfAbsent(type, k -> new HashMap<>()).put((Class<ExcelReader<?>>) r.getClass(), r);
         });

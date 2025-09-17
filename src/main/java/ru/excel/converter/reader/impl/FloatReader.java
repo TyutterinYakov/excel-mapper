@@ -1,11 +1,14 @@
 package ru.excel.converter.reader.impl;
 
 import org.dhatim.fastexcel.reader.Cell;
+import org.dhatim.fastexcel.reader.CellType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ru.excel.converter.reader.NumberExcelReader;
 import ru.excel.converter.reader.customization.ReaderCustomization;
+
+import java.math.BigDecimal;
 
 @Component
 public class FloatReader extends NumberExcelReader<Float> {
@@ -16,6 +19,6 @@ public class FloatReader extends NumberExcelReader<Float> {
 
     @Override
     public @NotNull Float read(@NotNull Cell cell, @NotNull ReaderCustomization readerCustomization) {
-        return catcher(cell.getRawValue(), Float.class, () -> Float.parseFloat(cell.getRawValue().trim()));
+        return catcher(cell, Float.class, Float::parseFloat, BigDecimal::floatValue);
     }
 }

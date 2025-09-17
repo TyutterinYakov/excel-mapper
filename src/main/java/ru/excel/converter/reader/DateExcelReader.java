@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import ru.excel.converter.exception.CellExcelReaderException;
 
-import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.util.Locale;
 import java.util.function.Supplier;
@@ -21,7 +20,7 @@ public abstract class DateExcelReader<T extends Temporal> extends ExcelReader<T>
         try {
             return catcher.get();
         } catch (Exception ex) {
-            log.warn("Incorrect value {} for type {}", value, type.getName(), ex);
+            log.debug("Incorrect value {} for type {}", value, type.getName(), ex);
             throw new CellExcelReaderException(messageSource.getMessage(MESSAGE_KEY,
                     new Object[]{value, type.getName()}, Locale.getDefault()));
         }

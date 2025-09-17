@@ -7,18 +7,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
-public class CellParsingException extends RuntimeException {
+public class ExcelParsingException extends ExcelException {
     private final Map<Integer, Map<Integer, Map<String, List<String>>>> errors;
 
-    public CellParsingException() {
-        this(new HashMap<>());
+    public ExcelParsingException(String message) {
+        super(message);
+        this.errors = new HashMap<>();
     }
 
-    public CellParsingException(Map<Integer, Map<Integer, Map<String, List<String>>>> errors) {
-        this.errors = errors;
-    }
 
     public void addError(int rowNum, int colNum, @NotNull String colName, @NotNull String error) {
         this.addError(rowNum, colNum, colName, List.of(error));
