@@ -3,10 +3,7 @@ package ru.excel.converter;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dhatim.fastexcel.reader.Cell;
-import org.dhatim.fastexcel.reader.ReadableWorkbook;
-import org.dhatim.fastexcel.reader.Row;
-import org.dhatim.fastexcel.reader.Sheet;
+import org.dhatim.fastexcel.reader.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.excel.converter.annotation.ExcelCell;
@@ -50,7 +47,20 @@ public class ExcelParser {
      * @return Список полученных объектов
      */
     public <T> @NotNull List<T> parse(@NotNull File file, @NotNull Class<T> type, int sheetNumber) {
-        try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(file)) {
+        return this.parse(file, type, sheetNumber, ReadingOptions.DEFAULT_READING_OPTIONS);
+    }
+
+    /**
+     * Парсит excel файл
+     *
+     * @param file        excel файл
+     * @param type        тип, в который нужно смапить значения
+     * @param sheetNumber номер листа с данными
+     * @param readingOptions параметры для чтения
+     * @return Список полученных объектов
+     */
+    public <T> @NotNull List<T> parse(@NotNull File file, @NotNull Class<T> type, int sheetNumber, @NotNull ReadingOptions readingOptions) {
+        try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(file, readingOptions)) {
             return process(readableWorkbook, type, sheetNumber);
         } catch (IOException e) {
             throw new ExcelException("Error when reading an excel file", e);
@@ -66,7 +76,20 @@ public class ExcelParser {
      * @return Список полученных объектов
      */
     public <T> @NotNull List<T> parse(@NotNull InputStream is, @NotNull Class<T> type, int sheetNumber) {
-        try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(is)) {
+        return this.parse(is, type, sheetNumber, ReadingOptions.DEFAULT_READING_OPTIONS);
+    }
+
+    /**
+     * Парсит excel файл
+     *
+     * @param is          поток
+     * @param type        тип, в который нужно смапить значения
+     * @param sheetNumber номер листа с данными
+     * @param readingOptions параметры для чтения
+     * @return Список полученных объектов
+     */
+    public <T> @NotNull List<T> parse(@NotNull InputStream is, @NotNull Class<T> type, int sheetNumber, @NotNull ReadingOptions readingOptions) {
+        try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(is, readingOptions)) {
             return process(readableWorkbook, type, sheetNumber);
         } catch (IOException e) {
             throw new ExcelException("Error when reading an excel file", e);
