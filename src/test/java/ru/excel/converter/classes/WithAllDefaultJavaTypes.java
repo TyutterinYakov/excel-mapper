@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.excel.converter.annotation.ExcelCell;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +28,8 @@ public class WithAllDefaultJavaTypes {
     private Float floatValue;
     @ExcelCell(name = "double_value")
     private Double doubleValue;
+    @ExcelCell(name = "big_decimal_value")
+    private BigDecimal bigDecimalValue;
 
     @ExcelCell(name = "str_value")
     private String strValue;

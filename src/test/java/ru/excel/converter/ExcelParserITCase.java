@@ -9,6 +9,7 @@ import ru.excel.converter.classes.WithAllDefaultJavaTypes;
 import ru.excel.converter.classes.WithCustomReader;
 import ru.excel.converter.exception.ExcelParsingException;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class ExcelParserITCase {
                         .floatValue(545.43f)
                         .intValue(4334)
                         .byteValue((byte) 1)
+                        .bigDecimalValue(new BigDecimal("-323344343.22349"))
                         .build(),
                 WithAllDefaultJavaTypes.builder().strValue("String2").longValue(222222222222L).boolValue(false)
                         .offsetDateTimeValue(null)
@@ -61,6 +63,7 @@ public class ExcelParserITCase {
                         .doubleValue(654.6773)
                         .floatValue(775.1f)
                         .intValue(6573)
+                        .bigDecimalValue(new BigDecimal("3294832483943920"))
                         .build(),
                 WithAllDefaultJavaTypes.builder().strValue("String3").longValue(3333333333333L).boolValue(true)
                         .offsetDateTimeValue(OffsetDateTime.parse("2025-09-15T15:40:37.180187+03:00"))
@@ -70,6 +73,7 @@ public class ExcelParserITCase {
                         .doubleValue(54.4)
                         .intValue(-3445)
                         .byteValue((byte) 127)
+                        .bigDecimalValue(new BigDecimal("93249932943949"))
                         .build()
         );
 
